@@ -1,3 +1,4 @@
+import propTypes from "prop-types";
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 import s from './ImageGallery.module.css'
 import fetchApi from '../../AppService';
@@ -6,7 +7,13 @@ import { Fragment } from 'react/cjs/react.production.min';
 import Loader from '../Loader/Loader';
 import Button from '../Button/Button';
 
+
 class ImageGallery extends PureComponent {
+  static propTypes = {
+    searchName: propTypes.string,
+    onClickLargeImageURL: propTypes.func
+  }
+
   state = {
     images: [],
     status: 'idle',

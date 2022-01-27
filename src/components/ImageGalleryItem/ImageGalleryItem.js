@@ -1,3 +1,4 @@
+import propTypes from 'prop-types'
 import s from './ImageGalleryItem.module.css'
 
 const ImageGalleryItem = ({ url, alt, myRef, largeImageURL, onClickLargeImageURL }) => {
@@ -10,6 +11,14 @@ const ImageGalleryItem = ({ url, alt, myRef, largeImageURL, onClickLargeImageURL
       )}
     </li>
   )
+}
+
+ImageGalleryItem.propTypes = {
+  url: propTypes.string,
+  alt: propTypes.string,
+  myRef: propTypes.object,
+  largeImageURL: propTypes.string,
+  onClickLargeImageURL: propTypes.func
 }
 
 export default ImageGalleryItem
