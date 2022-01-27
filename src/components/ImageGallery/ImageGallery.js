@@ -18,7 +18,6 @@ class ImageGallery extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const searchName = this.props.searchName
-    console.log(searchName);
     if (
       prevProps.searchName !== searchName ||
       prevState.page !== this.state.page
@@ -66,15 +65,10 @@ class ImageGallery extends PureComponent {
 
   render() {
     const { images, status, error } = this.state
-    console.log(this.props.searchName);
-    console.log(images);
-    console.log(status);
-
-
     return (
       <Fragment>
         {status === 'idle' && <p className={s.idle}>Input value</p>}
-        {status === 'rejected' && <strong>{error.message}</strong>}
+        {status === 'rejected' && <strong className={s.strong}>{error.message}</strong>}
 
         {images.length > 0 && (
           <ul className={s.gallery} >

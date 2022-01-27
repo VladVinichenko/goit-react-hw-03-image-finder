@@ -5,14 +5,17 @@ import { nanoid } from "nanoid";
 import ContactForm from "./components/ContactForm/ContactForm";
 import ContactList from "./components/ContactList/ContactList";
 import Filter from "./components/Filter/Filter";
-import s from './App.module.css'
 import propTypes from "prop-types";
 import Searchbar from "./components/Searchbar/Searchbar";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
+import Modal from "./components/Modal/Modal";
+import { ToastContainer } from "react-toastify";
 
 class App extends Component {
   state = {
     searchName: '',
+    showModal: false,
+    option: {},
   }
 
   onSubmitSearchName = (val) => {
@@ -20,18 +23,29 @@ class App extends Component {
     this.setState({ searchName: val })
   }
 
-  onClickLargeImageURL = () => {
-
-  }
+  toggleModalWindow = (url, alt) => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+      option: { imageUrl: url, imageAlt: alt },
+    }));
+  };
 
   render() {
-    const { searchName } = this.state
+    const { searchName, showModal, option } = this.state
     return (
       <Fragment>
         <Searchbar onSubmitSearchName={this.onSubmitSearchName} />
         <Section>
-          <ImageGallery searchName={searchName} onClickLargeImageURL={this.onClickLargeImageURL} />
+          <ImageGallery searchName={searchName} onClickLargeImageURL={this.toggleModalWindow} />
         </Section>
+        {showModal && (
+          <Modal
+            url={option.imageUrl}
+            alt={option.imageAlt}
+            onCloseModal={this.toggleModalWindow}
+          />
+        )}
+        <ToastContainer autoClose={4000} />
       </Fragment>
     )
   }
