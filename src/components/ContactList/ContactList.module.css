@@ -1,5 +1,4 @@
 .item {
-  border-radius: var(--card-radius);
   padding: 5px 10px;
   background-color: var(--background-color);
   color: var(--font-primary-color);

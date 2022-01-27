@@ -1,9 +1,9 @@
 import s from './ImageGalleryItem.module.css'
 
-const ImageGalleryItem = () => {
+const ImageGalleryItem = ({ url, alt }) => {
   return (
-    <li class="gallery-item">
-      <img src="" alt="" />
+    <li className={s.galleryItem}>
+      <img className={s.galleryImage} src={url} alt={alt} />
     </li>
   )
 }
