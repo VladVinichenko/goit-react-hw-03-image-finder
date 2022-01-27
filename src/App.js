@@ -20,13 +20,17 @@ class App extends Component {
     this.setState({ searchName: val })
   }
 
+  onClickLargeImageURL = () => {
+
+  }
+
   render() {
     const { searchName } = this.state
     return (
       <Fragment>
         <Searchbar onSubmitSearchName={this.onSubmitSearchName} />
         <Section>
-          <ImageGallery searchName={searchName} />
+          <ImageGallery searchName={searchName} onClickLargeImageURL={this.onClickLargeImageURL} />
         </Section>
       </Fragment>
     )

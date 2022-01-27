@@ -17,34 +17,52 @@ class ImageGallery extends PureComponent {
 
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.props.searchName);
+    const searchName = this.props.searchName
+    console.log(searchName);
     if (
-      prevProps.searchName !== this.props.searchName ||
+      prevProps.searchName !== searchName ||
       prevState.page !== this.state.page
     ) {
-      if (prevProps.searchName !== this.props.searchName) {
-        fetchApi(this.props.searchName, this.state.page)
-          .then(image => {
-            if (image.hits.length === 0) {
-              return Promise.reject(
-                new Error(`No results were found for this: ${this.props.searchName}`)
-              )
-            }
-            this.setState({
-              images: [...image.hits],
-              status: 'resolved'
+      if (
+        prevProps.searchName !== searchName ||
+        prevState.page !== this.state.page
+      ) {
+        if (prevProps.searchName !== searchName)
+          this.setState({ images: [], status: 'pending' }); {
+          fetchApi(searchName, this.state.page)
+            .then(el => {
+              if (el.hits.length === 0) {
+                return Promise.reject(
+                  new Error(`No results were found for this: ${searchName}`)
+                )
+              }
+              el.hits[0] = { ...el.hits[0], myRef: this.state.myRef };
+              this.setState({
+                images: [...this.state.images, ...el.hits],
+                status: 'resolved',
+              });
+              this.scrollInto(this.state.myRef);
             })
-          })
-          .catch(error => this.setState({ error, status: 'rejected' }));
+            .catch(error => this.setState({ error, status: 'rejected' }));
+        }
       }
     }
   }
+
+  scrollInto = elem => {
+    elem.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
+  };
 
   nextPage = () => {
     this.setState({
       page: this.state.page + 1,
     });
   };
+
+
 
   render() {
     const { images, status, error } = this.state
@@ -57,13 +75,19 @@ class ImageGallery extends PureComponent {
       <Fragment>
         {status === 'idle' && <p className={s.idle}>Input value</p>}
         {status === 'rejected' && <strong>{error.message}</strong>}
-        {status === 'pending' && <Loader />}
-        {status === 'resolved' && <Button>Load more</Button>}
+
         {images.length > 0 && (
           <ul className={s.gallery} >
             {
               images.map(el => (
-                <ImageGalleryItem key={el.id} url={el.webformatURL} alt={el.tags} />
+                <ImageGalleryItem
+                  key={el.id}
+                  url={el.webformatURL}
+                  alt={el.tags}
+                  myRef={el.myRef}
+                  largeImageURL={el.largeImageURL}
+                  onClickLargeImageURL={this.props.onClickLargeImageURL}
+                />
               ))
             }
 
@@ -71,6 +95,8 @@ class ImageGallery extends PureComponent {
           </ul>
         )}
 
+        {status === 'pending' && <Loader />}
+        {status === 'resolved' && <Button action={this.nextPage}>Load more</Button>}
       </Fragment>
 
 
